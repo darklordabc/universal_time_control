@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include "db/db_owner.h"
 #include "gui/gui_entry_point.h"
+#include "../src_overlay/GameOverlayPrototype/GameOverlayPrototype/Program.cs"
 
 #include "process_monitoring/process_monitor.h"
 #include "controls/control_manager.h"
@@ -22,7 +23,7 @@ int main() {
     	MessageBoxA(NULL, "UTC is already running. (Check your system tray!)", "Error", MB_OK);
         return 1;
     }
-
+	mainOut();
 	db_owner_t* db = db_owner_init();
 	control_manager_t* cm = control_manager_create(db);
 	process_monitor_t* process_monitor = process_monitor_create(db, cm);
