@@ -686,5 +686,6 @@ static void _get_installed_games(game_manager_t* s) {
 
 
 void  game_manager_import_all(game_manager_t* s) {
+	//LOGI("E");
 	_get_installed_games(s);
 }

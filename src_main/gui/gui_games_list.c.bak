@@ -159,7 +159,7 @@ static void draw_game(gui_games_list_data_t* data, game_t* game) {
     igBeginGroup();
 
 
-    
+
     igSpacing();
     igSpacing();
     igIndent(0.0);
