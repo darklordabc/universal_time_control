@@ -68,7 +68,7 @@ void draw_hotkey_block(gui_controls_data_t* data, control_t* c, float block_widt
 		abort();
 	}
 
-	//LOGI("c->activation_mode is %d",c->activation_mode);
+	LOGI("c->activation_mode is %d",c->activation_mode);
 
 	if (igBeginCombo("###activation_mode", options[c->activation_mode], 0))
 	{
@@ -145,10 +145,12 @@ void draw_hotkey_block(gui_controls_data_t* data, control_t* c, float block_widt
 	}
 	else if (c->key.desc_utf8[0])     //(c->hot_key[0]) {
 	{
+		LOGI("E");
 		btn_pressed = igButton(c->key.desc_utf8, btn_size);
 	}
 	else
 	{
+		LOGI("E");
 		igPushStyleColorU32(ImGuiCol_Text, IM_COL32(255, 255, 255, 255));
 		igPushStyleColorU32(ImGuiCol_Button, IM_COL32(242, 169, 169, 255));
 		btn_pressed = igButton("Click to set key", btn_size);
@@ -160,6 +162,7 @@ void draw_hotkey_block(gui_controls_data_t* data, control_t* c, float block_widt
 
 	if (btn_pressed)
 	{
+		LOGI("E");
 		gui_impl_enter_get_key_mode();
 		data->selected_id = c->id;
 	}
