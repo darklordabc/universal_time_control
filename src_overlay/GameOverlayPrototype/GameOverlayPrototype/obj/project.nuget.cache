@@ -1,0 +1,18 @@
+{
+  "version": 2,
+  "dgSpecHash": "u6FzA6zxua0F3OKD09PNBePhvl+XuMYgLJWz3vDntEvZepUIYYNq29zw/HSaG3yROx+CpF5DvgwSLRLWMd6y0w==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Jared\\source\\repos\\universal_time_control\\src_overlay\\GameOverlayPrototype\\GameOverlayPrototype\\GameOverlayPrototype.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Jared\\.nuget\\packages\\flurl\\2.8.2\\flurl.2.8.2.nupkg.sha512",
+    "C:\\Users\\Jared\\.nuget\\packages\\flurl.http\\2.4.2\\flurl.http.2.4.2.nupkg.sha512",
+    "C:\\Users\\Jared\\.nuget\\packages\\gameoverlay.net\\4.3.0\\gameoverlay.net.4.3.0.nupkg.sha512",
+    "C:\\Users\\Jared\\.nuget\\packages\\newtonsoft.json\\12.0.2\\newtonsoft.json.12.0.2.nupkg.sha512",
+    "C:\\Users\\Jared\\.nuget\\packages\\restsharp\\106.11.4\\restsharp.106.11.4.nupkg.sha512",
+    "C:\\Users\\Jared\\.nuget\\packages\\sharpdx\\4.2.0\\sharpdx.4.2.0.nupkg.sha512",
+    "C:\\Users\\Jared\\.nuget\\packages\\sharpdx.direct2d1\\4.2.0\\sharpdx.direct2d1.4.2.0.nupkg.sha512",
+    "C:\\Users\\Jared\\.nuget\\packages\\sharpdx.dxgi\\4.2.0\\sharpdx.dxgi.4.2.0.nupkg.sha512",
+    "C:\\Users\\Jared\\.nuget\\packages\\unmanagedexports\\1.2.7\\unmanagedexports.1.2.7.nupkg.sha512"
+  ],
+  "logs": []
+}

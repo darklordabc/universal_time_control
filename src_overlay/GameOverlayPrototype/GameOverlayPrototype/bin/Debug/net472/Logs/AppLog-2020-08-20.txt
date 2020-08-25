@@ -1,0 +1,109 @@
+[Warning][8/20/2020 7:54:19 PM] No process by the name of The Binding of Isaac: Rebirth - Steam was found.
+[Warning][8/20/2020 7:54:21 PM] No process by the name of Binding of Isaac: Afterbirth+ was found.
+[Warning][8/20/2020 7:54:21 PM] No process by the name of  was found.
+[Warning][8/20/2020 7:54:21 PM] No process by the name of Xbox Game Bar was found.
+[Warning][8/20/2020 7:54:36 PM] No process by the name of Form1 was found.
+[Warning][8/20/2020 7:55:04 PM] No process by the name of The Binding of Isaac: Rebirth - Steam was found.
+[Warning][8/20/2020 7:55:06 PM] No process by the name of Binding of Isaac: Afterbirth+ was found.
+[Warning][8/20/2020 7:55:37 PM] No process by the name of The Binding of Isaac: Rebirth - Steam was found.
+[Warning][8/20/2020 7:55:37 PM] No process by the name of Binding of Isaac: Afterbirth+ was found.
+[Debug][8/20/2020 7:59:42 PM] Starting update loop (open the process you specified and drag around)
+[Debug][8/20/2020 7:59:42 PM] Update rate: 00:00:00.0160000
+[Debug][8/20/2020 7:59:42 PM] Author: 
+[Debug][8/20/2020 7:59:42 PM] Description: 
+[Debug][8/20/2020 7:59:42 PM] Name: 
+[Debug][8/20/2020 7:59:42 PM] Identifier: 
+[Debug][8/20/2020 7:59:42 PM] Version: 
+[Information][8/20/2020 7:59:42 PM] Note: Settings are saved to a settings folder in your main app folder.
+[Information][8/20/2020 7:59:42 PM] Give your window focus to enable the overlay (and unfocus to disable..)
+[Information][8/20/2020 7:59:42 PM] Close the console to end the demo.
+[Debug][8/20/2020 8:01:46 PM] Starting update loop (open the process you specified and drag around)
+[Debug][8/20/2020 8:01:46 PM] Update rate: 00:00:00.0160000
+[Debug][8/20/2020 8:01:46 PM] Author: 
+[Debug][8/20/2020 8:01:46 PM] Description: 
+[Debug][8/20/2020 8:01:46 PM] Name: 
+[Debug][8/20/2020 8:01:46 PM] Identifier: 
+[Debug][8/20/2020 8:01:46 PM] Version: 
+[Information][8/20/2020 8:01:46 PM] Note: Settings are saved to a settings folder in your main app folder.
+[Information][8/20/2020 8:01:46 PM] Give your window focus to enable the overlay (and unfocus to disable..)
+[Information][8/20/2020 8:01:46 PM] Close the console to end the demo.
+[Debug][8/20/2020 8:02:44 PM] Starting update loop (open the process you specified and drag around)
+[Debug][8/20/2020 8:02:44 PM] Update rate: 00:00:00.0160000
+[Debug][8/20/2020 8:02:44 PM] Author: 
+[Debug][8/20/2020 8:02:44 PM] Description: 
+[Debug][8/20/2020 8:02:44 PM] Name: 
+[Debug][8/20/2020 8:02:44 PM] Identifier: 
+[Debug][8/20/2020 8:02:44 PM] Version: 
+[Information][8/20/2020 8:02:44 PM] Note: Settings are saved to a settings folder in your main app folder.
+[Information][8/20/2020 8:02:44 PM] Give your window focus to enable the overlay (and unfocus to disable..)
+[Information][8/20/2020 8:02:44 PM] Close the console to end the demo.
+[Debug][8/20/2020 8:04:17 PM] Starting update loop (open the process you specified and drag around)
+[Debug][8/20/2020 8:04:17 PM] Update rate: 00:00:00.0160000
+[Debug][8/20/2020 8:04:17 PM] Author: 
+[Debug][8/20/2020 8:04:17 PM] Description: 
+[Debug][8/20/2020 8:04:17 PM] Name: 
+[Debug][8/20/2020 8:04:17 PM] Identifier: 
+[Debug][8/20/2020 8:04:17 PM] Version: 
+[Information][8/20/2020 8:04:17 PM] Note: Settings are saved to a settings folder in your main app folder.
+[Information][8/20/2020 8:04:17 PM] Give your window focus to enable the overlay (and unfocus to disable..)
+[Information][8/20/2020 8:04:17 PM] Close the console to end the demo.
+[Debug][8/20/2020 8:12:10 PM] Starting update loop (open the process you specified and drag around)
+[Debug][8/20/2020 8:12:10 PM] Update rate: 00:00:00.0160000
+[Debug][8/20/2020 8:12:10 PM] Author: 
+[Debug][8/20/2020 8:12:10 PM] Description: 
+[Debug][8/20/2020 8:12:10 PM] Name: 
+[Debug][8/20/2020 8:12:10 PM] Identifier: 
+[Debug][8/20/2020 8:12:10 PM] Version: 
+[Information][8/20/2020 8:12:10 PM] Note: Settings are saved to a settings folder in your main app folder.
+[Information][8/20/2020 8:12:10 PM] Give your window focus to enable the overlay (and unfocus to disable..)
+[Information][8/20/2020 8:12:10 PM] Close the console to end the demo.
+[Debug][8/20/2020 8:12:52 PM] Starting update loop (open the process you specified and drag around)
+[Debug][8/20/2020 8:12:52 PM] Update rate: 00:00:00.0160000
+[Debug][8/20/2020 8:12:52 PM] Author: 
+[Debug][8/20/2020 8:12:52 PM] Description: 
+[Debug][8/20/2020 8:12:52 PM] Name: 
+[Debug][8/20/2020 8:12:52 PM] Identifier: 
+[Debug][8/20/2020 8:12:52 PM] Version: 
+[Information][8/20/2020 8:12:52 PM] Note: Settings are saved to a settings folder in your main app folder.
+[Information][8/20/2020 8:12:52 PM] Give your window focus to enable the overlay (and unfocus to disable..)
+[Information][8/20/2020 8:12:52 PM] Close the console to end the demo.
+[Debug][8/20/2020 8:13:56 PM] Starting update loop (open the process you specified and drag around)
+[Debug][8/20/2020 8:13:56 PM] Update rate: 00:00:00.0160000
+[Debug][8/20/2020 8:13:56 PM] Author: 
+[Debug][8/20/2020 8:13:56 PM] Description: 
+[Debug][8/20/2020 8:13:56 PM] Name: 
+[Debug][8/20/2020 8:13:56 PM] Identifier: 
+[Debug][8/20/2020 8:13:56 PM] Version: 
+[Information][8/20/2020 8:13:56 PM] Note: Settings are saved to a settings folder in your main app folder.
+[Information][8/20/2020 8:13:56 PM] Give your window focus to enable the overlay (and unfocus to disable..)
+[Information][8/20/2020 8:13:56 PM] Close the console to end the demo.
+[Debug][8/20/2020 8:14:54 PM] Starting update loop (open the process you specified and drag around)
+[Debug][8/20/2020 8:14:54 PM] Update rate: 00:00:00.0160000
+[Debug][8/20/2020 8:14:54 PM] Author: 
+[Debug][8/20/2020 8:14:54 PM] Description: 
+[Debug][8/20/2020 8:14:54 PM] Name: 
+[Debug][8/20/2020 8:14:54 PM] Identifier: 
+[Debug][8/20/2020 8:14:54 PM] Version: 
+[Information][8/20/2020 8:14:54 PM] Note: Settings are saved to a settings folder in your main app folder.
+[Information][8/20/2020 8:14:54 PM] Give your window focus to enable the overlay (and unfocus to disable..)
+[Information][8/20/2020 8:14:54 PM] Close the console to end the demo.
+[Debug][8/20/2020 8:18:53 PM] Starting update loop (open the process you specified and drag around)
+[Debug][8/20/2020 8:18:53 PM] Update rate: 00:00:00.0160000
+[Debug][8/20/2020 8:18:53 PM] Author: 
+[Debug][8/20/2020 8:18:53 PM] Description: 
+[Debug][8/20/2020 8:18:53 PM] Name: 
+[Debug][8/20/2020 8:18:53 PM] Identifier: 
+[Debug][8/20/2020 8:18:53 PM] Version: 
+[Information][8/20/2020 8:18:53 PM] Note: Settings are saved to a settings folder in your main app folder.
+[Information][8/20/2020 8:18:53 PM] Give your window focus to enable the overlay (and unfocus to disable..)
+[Information][8/20/2020 8:18:53 PM] Close the console to end the demo.
+[Debug][8/20/2020 8:19:51 PM] Starting update loop (open the process you specified and drag around)
+[Debug][8/20/2020 8:19:51 PM] Update rate: 00:00:00.0160000
+[Debug][8/20/2020 8:19:51 PM] Author: 
+[Debug][8/20/2020 8:19:51 PM] Description: 
+[Debug][8/20/2020 8:19:51 PM] Name: 
+[Debug][8/20/2020 8:19:51 PM] Identifier: 
+[Debug][8/20/2020 8:19:51 PM] Version: 
+[Information][8/20/2020 8:19:51 PM] Note: Settings are saved to a settings folder in your main app folder.
+[Information][8/20/2020 8:19:51 PM] Give your window focus to enable the overlay (and unfocus to disable..)
+[Information][8/20/2020 8:19:51 PM] Close the console to end the demo.
