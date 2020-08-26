@@ -1,0 +1,74 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\Jared\\source\\repos\\universal_time_control\\src_overlay\\GameOverlayPrototype\\GameOverlayPrototype\\GameOverlayPrototype.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\Jared\\source\\repos\\universal_time_control\\src_overlay\\GameOverlayPrototype\\GameOverlayPrototype\\GameOverlayPrototype.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Jared\\source\\repos\\universal_time_control\\src_overlay\\GameOverlayPrototype\\GameOverlayPrototype\\GameOverlayPrototype.csproj",
+        "projectName": "GameOverlayPrototype",
+        "projectPath": "C:\\Users\\Jared\\source\\repos\\universal_time_control\\src_overlay\\GameOverlayPrototype\\GameOverlayPrototype\\GameOverlayPrototype.csproj",
+        "packagesPath": "C:\\Users\\Jared\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Jared\\source\\repos\\universal_time_control\\src_overlay\\GameOverlayPrototype\\GameOverlayPrototype\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "K:\\Microsoft\\Xamarin\\NuGet\\",
+          "c:\\program files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Jared\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net472"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "K:\\Downloads\\Overlay.NET-master\\src\\Overlay.NET": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net472": {
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net472": {
+          "dependencies": {
+            "Flurl.Http": {
+              "target": "Package",
+              "version": "[2.4.2, )"
+            },
+            "GameOverlay.Net": {
+              "target": "Package",
+              "version": "[4.3.0, )"
+            },
+            "RestSharp": {
+              "target": "Package",
+              "version": "[106.11.4, )"
+            },
+            "UnmanagedExports": {
+              "target": "Package",
+              "version": "[1.2.7, )"
+            }
+          },
+          "runtimeIdentifierGraphPath": "c:\\program files\\dotnet\\sdk\\3.1.301\\RuntimeIdentifierGraph.json"
+        }
+      },
+      "runtimes": {
+        "win7-x86": {
+          "#import": []
+        }
+      }
+    }
+  }
+}
