@@ -165,6 +165,59 @@ static int64_t get_seconds_epoch()
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 
 
+bool is_control_in_limit_mode(control_t *control)
+{
+	if ((control->limit_mode == CTRL_LIMITED_MODE_COOLDOWN) && control->is_in_cooldown)
+	{
+		return true;
+	}
+
+	// if ((control->limit_mode==2) && !control->have_enough_energy) continue;
+	if ((control->limit_mode == CTRL_LIMITED_MODE_ENERGY) && (control->current_energy_level < control->cost_per_use))
+	{
+		return true;
+	}
+
+	return false;
+}
+
+
+//true if changed
+bool control_update_limit(control_t *control)
+{
+	if ((control->limit_mode == CTRL_LIMITED_MODE_COOLDOWN)  && (control->is_in_cooldown))
+	{
+		if ((now - control->cooldown_began) >= control->cooldown_secs)
+		{
+			control->is_in_cooldown = false;
+			return true;
+		}
+
+
+	}
+}
+
+if (control->limit_mode == CTRL_LIMITED_MODE_ENERGY)
+{
+	bool was_at_max = (control->current_energy_level >= control->max_energy);
+	float to_add = ((float)control.recharge_rate)*delta_secs;
+	// printf("to add: %f", to_add);
+	control->current_energy_level += to_add;
+	if (control.current_energy_level > control->max_energy)
+	{
+		control->current_energy_level = control->max_energy;
+	}
+	if (!was_at_max)
+	{
+		return true;
+	}
+}
+
+return false;
+}
+
+
+
 void control_manager_thread(control_manager_t* ct)
 {
 	// printf("%s\n", "control_manager_thread");
@@ -183,7 +236,8 @@ void control_manager_thread(control_manager_t* ct)
 		float delta_secs = ((float)delta)/1000.0f;
 		// printf("delta: %f\n", delta_secs);
 		// printf("delta: %i\n", (int) delta);
-		{
+
+		{//Key handling begin
 			std::lock_guard<std::mutex> lock(ct->main_mutex);
 			if (ct->should_quit) return;
 
@@ -192,100 +246,61 @@ void control_manager_thread(control_manager_t* ct)
 
 			gui_impl_get_keys_data(&keys_down, &keys_pressed);
 
-			if (keys_pressed.size() > 0)
+			//LOGI("Pressed: ");
+			for (const auto& key_pressed : keys_pressed)
 			{
-				//LOGI("Pressed: ");
-				for (const auto& key_pressed : keys_pressed)
+				// printf("%s, ", key_pressed.desc_utf8);
+				auto matching_toggle_controls = find_controls_matching_key(ct, key_pressed, CTRL_ACTIVATION_MODE_TOGGLE);
+				auto matching_press_controls = find_controls_matching_key(ct, key_pressed, CTRL_ACTIVATION_MODE_PRESS);
+
+				if (matching_toggle_controls.size() > 0 || matching_press_controls.size() > 0)
 				{
-					// printf("%s, ", key_pressed.desc_utf8);
-					auto matching_toggle_controls = find_controls_matching_key(ct, key_pressed, 2);
-					if (matching_toggle_controls.size() > 0 )
+					//@20200823: first clear the previous state
+					for (const control_t& ctrl : ct->controls)
 					{
-						//lugang@20200823: first clear the previous state
-						for (const control_t& ctrl : ct->controls)
-						{
-							bool already_exist = false;
-							for (control_t* c : matching_toggle_controls)
-							{
-								if (c == (control_t*)&ctrl)
-								{
-									already_exist = true;
-									break;
-								}
-							}
-							if (already_exist)
-							{
-								LOGI("already in list");
-								continue;
-							}
-
-							control_t* c1 = (control_t*)&ctrl;
-							c1->is_toggled_on = false;
-							have_changed = true;
-						}
-
-
-						for (control_t* control : matching_toggle_controls)
-						{
-							control->is_toggled_on = !control->is_toggled_on;
-							have_changed = true;
-						}
-					}
-
-					auto matching_press_controls = find_controls_matching_key(ct, key_pressed, 0);
-
-					if (matching_press_controls.size() > 0 )
-					{
-						//lugang@20200823: first clear the previous state
-						for ( const control_t& ctrl : ct->controls)
-						{
-							bool already_exist = false;
-							for (control_t* c : matching_press_controls)
-							{
-								if (c == (control_t*)&ctrl)
-								{
-									already_exist = true;
-									break;
-								}
-							}
-							if (already_exist)
-							{
-								LOGI("already in list");
-								continue;
-							}
-
-							control_t* c1 = (control_t*)&ctrl;
-							c1->press_within_duration = false;
-							c1->is_in_cooldown = false;
-						}
-
-						for (control_t* control : matching_press_controls)
-						{
-							if (control->press_within_duration) continue;
-							if ((control->limit_mode==1) && control->is_in_cooldown) continue;
-							// if ((control->limit_mode==2) && !control->have_enough_energy) continue;
-							if ((control->limit_mode==2) && (control->current_energy_level < control->cost_per_use)) continue;
-
-							control->press_within_duration = true;
-							control->press_began = now;
-							if (control->limit_mode == 2)
-							{
-								control->current_energy_level -= control->cost_per_use;
-								// control-
-							}
-							have_changed = true;
-
-							// control->is_toggled_on = !control->is_toggled_on;
-						}
+						control_t* c1 = (control_t*)&ctrl;
+						c1->is_toggled_on = false;
+						c1->press_within_duration = false;
+						//c1->is_in_cooldown = false;
 					}
 				}
-				// printf("\n");
+
+				for (control_t* control : matching_toggle_controls)
+				{
+					if (is_control_in_limit_mode(control)) continue;
+
+					control->is_toggled_on = !control->is_toggled_on;
+
+					if (control->limit_mode == CTRL_LIMITED_MODE_ENERGY)
+					{
+						control->current_energy_level -= control->cost_per_use;
+					}
+
+					have_changed = true;
+				}
+
+				for (control_t* control : matching_press_controls)
+				{
+					if (control->press_within_duration) continue;
+					if (is_control_in_limit_mode(control)) continue;
+
+					control->press_within_duration = true;
+					control->press_began = now;
+					if (control->limit_mode == CTRL_LIMITED_MODE_ENERGY)
+					{
+						control->current_energy_level -= control->cost_per_use;
+					}
+					have_changed = true;
+
+					// control->is_toggled_on = !control->is_toggled_on;
+				}
+
 			}
 
 
 			for (const auto& control : ct->controls)
 			{
-				if (control.activation_mode == 0)
+				if (control.activation_mode == CTRL_ACTIVATION_MODE_PRESS)
 				{
 					if (control.press_within_duration)
 					{
@@ -293,7 +308,7 @@ void control_manager_thread(control_manager_t* ct)
 						{
 							((control_t*)&control)->press_within_duration = false;
 
-							if (control.limit_mode==1)
+							if (control.limit_mode == CTRL_LIMITED_MODE_COOLDOWN)
 							{
 								((control_t*)&control)->is_in_cooldown = true;
 								((control_t*)&control)->cooldown_began = now;
@@ -302,35 +317,10 @@ void control_manager_thread(control_manager_t* ct)
 							have_changed = true;
 						}
 					}
-					else
-					{
-						if ((control.limit_mode == 1)  && (control.is_in_cooldown))
-						{
-							if ((now - control.cooldown_began) >= control.cooldown_secs)
-							{
-								((control_t*)&control)->is_in_cooldown = false;
-								have_changed = true;
-							}
-						}
-					}
 
-					if (control.limit_mode == 2)
-					{
-						bool was_at_max = (control.current_energy_level >= control.max_energy);
-						float to_add = ((float)control.recharge_rate)*delta_secs;
-						// printf("to add: %f", to_add);
-						((control_t*)&control)->current_energy_level += to_add;
-						if (control.current_energy_level > control.max_energy)
-						{
-							((control_t*)&control)->current_energy_level = control.max_energy;
-						}
-						if (!was_at_max)
-						{
-							have_changed = true;
-						}
-					}
+					have_changed = control_update_limit(control);
 				}
-				else if (control.activation_mode == 1)
+				else if (control.activation_mode == CTRL_ACTIVATION_MODE_HOLD)
 				{
 					((control_t*)&control)->is_held = false;
 					have_changed = true;
@@ -340,7 +330,7 @@ void control_manager_thread(control_manager_t* ct)
 
 			for (const auto& key_down : keys_down)
 			{
-				auto matching_hold_controls = find_controls_matching_key(ct, key_down, 1);
+				auto matching_hold_controls = find_controls_matching_key(ct, key_down, CTRL_ACTIVATION_MODE_HOLD);
 
 				for (control_t* control : matching_hold_controls)
 				{
@@ -349,7 +339,8 @@ void control_manager_thread(control_manager_t* ct)
 				}
 			}
 
-		}
+		}//Key handling end
+
 
 		if (have_changed)
 		{
@@ -361,13 +352,9 @@ void control_manager_thread(control_manager_t* ct)
 
 
 		{
-
 			// std::condition_variable test;
 
-
-
 			std::unique_lock<std::mutex> keys_lock(*keys_mutex);
-
 
 			keys_cv->wait_for(
 			    keys_lock,
@@ -375,8 +362,6 @@ void control_manager_thread(control_manager_t* ct)
 			);
 
 		}
-
-
 
 		// util_sleep_for_ms(125);
 
@@ -392,7 +377,6 @@ void control_manager_sleep(control_manager_t* c)
 {
 	std::unique_lock<std::mutex> lock(c->controls_changed_mutex);
 
-
 	c->controls_changed.wait_for(
 	    lock,
 	    std::chrono::milliseconds(500)
@@ -403,33 +387,33 @@ void control_manager_sleep(control_manager_t* c)
 static int _get_control_state(control_manager_t* c, const control_t* cont)
 {
 	(void)c;
-	if (cont->activation_mode == 0)   // press
+	if (cont->activation_mode == CTRL_ACTIVATION_MODE_PRESS)   // press
 	{
-		if ((cont->limit_mode == 1) && (cont->is_in_cooldown))
+		if ((cont->limit_mode == CTRL_LIMITED_MODE_COOLDOWN) && (cont->is_in_cooldown))
 		{
-			return 2;
+			return CTRL_STATE_UNAVAILABLE;
 		}
-		else if ((cont->limit_mode == 2) && (!cont->press_within_duration) && (cont->current_energy_level < cont->cost_per_use))
+
+		if ((cont->limit_mode == CTRL_LIMITED_MODE_ENERGY) && (!cont->press_within_duration) && (cont->current_energy_level < cont->cost_per_use))
 		{
-			return 2;
+			return CTRL_STATE_UNAVAILABLE;
 		}
-		else
-		{
-			return cont->press_within_duration;
-		}
+
+		return cont->press_within_duration;
 	}
-	else if (cont->activation_mode == 1)     // hold
+
+	if (cont->activation_mode == CTRL_ACTIVATION_MODE_HOLD)     // hold
 	{
-		return cont->is_held ? 1 : 0;
+		return cont->is_held ? CTRL_STATE_ACTIVE : CTRL_STATE_NOTHING;
 	}
-	else if (cont->activation_mode == 2)     // toggle
+
+	if (cont->activation_mode == CTRL_ACTIVATION_MODE_TOGGLE)     // toggle
 	{
-		return cont->is_toggled_on ? 1 : 0;
+		return cont->is_toggled_on ? CTRL_STATE_ACTIVE : CTRL_STATE_NOTHING;
 	}
-	else
-	{
-		return false;
-	}
+
+	return CTRL_STATE_NOTHING;
+
 }
 
 // assume the control is active- what's its timescale?
@@ -455,7 +439,7 @@ float control_manager_calculate_timescale(control_manager_t* ct)
 
 	for (const control_t& control : ct->controls)
 	{
-		if (_get_control_state(ct, &control) != 1) continue;
+		if (_get_control_state(ct, &control) != CTRL_STATE_ACTIVE) continue;
 		timescale = _get_timescale_for_control(ct, &control);
 	}
 
