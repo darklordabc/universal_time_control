@@ -173,8 +173,8 @@ static void _get_running_processes(vec_process_path_and_pid_t* out_vec) {
 	while (1) {
 		// etc
 
-		// printf("pid: %lu\n", entry.th32ProcessID);
-		// printf("\nPROCESS NAME:  %ls", entry.szExeFile );
+		//LOGI("pid: %lu\n", entry.th32ProcessID);
+		//LOGI("\nPROCESS NAME:  %ls", entry.szExeFile );
 		HANDLE process = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, FALSE, entry.th32ProcessID);
 		if (!process) {
 			// printf("failed to open: %ls\n", entry.szExeFile);
@@ -250,7 +250,7 @@ static void _load_enabled_from_db(process_monitor_t* p, vec_process_path_t* out_
 		if (sqlite3_step(p->get_enabled_paths_statement) != SQLITE_ROW) break;
 
 		const char* path = (const char*)sqlite3_column_text(p->get_enabled_paths_statement, 0);
-
+		
 		char path_utf8_lower[MAX_PATH];
 		util_casefold_utf8(path, path_utf8_lower, MAX_PATH-1);
 
@@ -261,9 +261,9 @@ static void _load_enabled_from_db(process_monitor_t* p, vec_process_path_t* out_
 		}
 
 
-		if (strstr(path_utf8_lower, "mindustry") != 0) {
+		/*if (strstr(path_utf8_lower, "mindustry") != 0) {
 			printf("DB: %s\n", path_utf8_lower);
-		}
+		}*/
 
 		
 
@@ -426,7 +426,7 @@ static void _start_managing_new_processes(
 
 static void _update_injected_timescales(process_monitor_t* p) {
 	for (auto& managed_exe : p->managed_processes) {
-		printf("Managed: (PID %lu) %s\n", managed_exe.pid, managed_exe.path);
+		LOGI("Managed: (PID %lu) %s\n", managed_exe.pid, managed_exe.path);
 
 		timecontrol_ipc_cmd_t command;
 		command.cmd_type = UTC_IPC_CMD_SET_TIMESCALE;
@@ -468,7 +468,7 @@ static int _timescale_update_thread(void* _p) {
 
 	while (1) {
 		if (_get_should_quit(p)) {
-			printf("timescale update thread should break\n");
+			LOGI("timescale update thread should break");
 			break;
 		}
 

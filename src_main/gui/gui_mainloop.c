@@ -5,6 +5,9 @@
 
 #include <stdlib.h>
 
+#include "../util.h"
+
+
 static const ImVec2 VEC2_ZERO = {0,0};
 
 struct _gui_mainloop_data

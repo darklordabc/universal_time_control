@@ -173,12 +173,14 @@ static void delete_old_steam_games_from_db(sqlite3* db, int timestamp) {
 }
 
 
+
 static void insert_exe_to_db(sqlite3* db, int game_id, const char* path) {
+	LOGI("%d,%s",game_id,path);
 	sqlite3_stmt* insert_stmt;
 	int prepare_result = sqlite3_prepare_v2(db, "insert into game_exe (game_id, path) values (?, ?);", -1, &insert_stmt, NULL);
 	if (prepare_result != SQLITE_OK) {
 		const char* err = sqlite3_errmsg(db);
-		printf("sqlite err5: %s\n", err);
+		LOGI("sqlite err5: %s\n", err);
 		abort();
 	}
 	sqlite3_bind_int(insert_stmt, 1, game_id);
@@ -186,7 +188,7 @@ static void insert_exe_to_db(sqlite3* db, int game_id, const char* path) {
 
 	if (sqlite3_step(insert_stmt) != SQLITE_DONE) {
 		const char* err = sqlite3_errmsg(db);
-		printf("sqlite insert game exe err: %s\n", err);
+		LOGI("sqlite insert game exe err: %s\n", err);
 		abort();
 	}
 
@@ -208,14 +210,11 @@ static void _game_manager_thread(game_manager_t* s) {
 
 		s->is_importing = true;
 
-			game_manager_import_all(s);
+		game_manager_import_all(s);
 
 		s->is_importing = false;
 		s->should_import = false;
-
-
 	}
-
 
 }
 
@@ -449,7 +448,7 @@ next_exe:;
 static strvec_t _find_acfs(const std::string& base_path) {
 	strvec_t acfs;
 
-	printf("searching: %s\n", base_path.c_str());
+	LOGI("searching: %s\n", base_path.c_str());
 
 	WIN32_FIND_DATAA data;
 	std::string path_suffixed = base_path + "\\*";
@@ -466,7 +465,7 @@ static strvec_t _find_acfs(const std::string& base_path) {
 			std::string name(data.cFileName);
 
 			if (startsWith(name, "appmanifest_", 12) && endsWith(name, ".acf", 4)) {
-				printf("found file: %s\n", name.c_str());
+				LOGI("found file: %s\n", name.c_str());
 				acfs.push_back(base_path + "\\" + name);
 			}
 		}
@@ -564,7 +563,7 @@ static void _get_installed_games(game_manager_t* s) {
 		}
 
 		for (const auto& lib : libraries) {
-			printf("Library: %s\n", lib.c_str());
+			LOGI("Library: %s\n", lib.c_str());
 		}
 	} catch (const std::exception& e) {
 		printf("Error reading libraryfolders: %s\n", e.what());
@@ -585,7 +584,7 @@ static void _get_installed_games(game_manager_t* s) {
 		// acfs.insert(acfs.end(), _acfs.begin(), _acfs.end());
 
 		for (const auto& acf : _acfs) {
-			printf("%s\n", acf.c_str());
+			LOGI("%s\n", acf.c_str());
 
 			try {
 				auto vdf = _read_vdf(acf);
@@ -601,7 +600,7 @@ static void _get_installed_games(game_manager_t* s) {
 					continue;
 				}
 				std::string install_dir = lib + "\\common\\" + install_it->second;
-				printf("game path: %s\n", install_dir.c_str());
+				LOGI("game path: %s\n", install_dir.c_str());
 
 				auto appid_it = vdf.attribs.find("appid");
 				if (appid_it == vdf.attribs.end()) {
@@ -630,15 +629,9 @@ static void _get_installed_games(game_manager_t* s) {
 					}
 				}
 
-
-
-
-
 			} catch (const std::exception& e) {
-				printf("Error reading acf (or finding EXEs) %s: %s\n", acf.c_str(), e.what());
+				LOGI("Error reading acf (or finding EXEs) %s: %s\n", acf.c_str(), e.what());
 			}
-
-
 
 		}
 
@@ -677,14 +670,46 @@ static void _get_installed_games(game_manager_t* s) {
 
 
 
-
-
-
-
-
-
-
-
 void  game_manager_import_all(game_manager_t* s) {
 	_get_installed_games(s);
 }
+
+#include <string.h>
+
+void insert_non_steam_game(game_manager_t* s,char *exe_path)
+{
+
+	sqlite3* db = db_owner_lock_and_get_db(s->db_owner);
+
+	char name[1024]; 
+
+	strcpy(name,exe_path);
+  	char *ch; //define this
+  	ch = strtok(name, "\\"); //first split
+  	while (ch != NULL) {
+    	strcpy(name, ch);//copy result
+     	 //printf("%s\n", ch);
+      	ch = strtok(NULL, "\\");//next split
+  	}
+
+	char *end = strstr(name,".");
+	if (end)
+	{
+		*end = 0;
+	}
+
+  	LOGI("last filename: %s,exe_path:%s", name,exe_path);//result filename
+
+
+	int64_t timestamp = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+
+	int id = upsert_steam_game(db, -1, name, true, timestamp);
+	delete_exes_from_db(db, id);
+
+	
+	insert_exe_to_db(db,id, exe_path);
+
+	db_owner_surrender_db_and_unlock(s->db_owner);
+
+}
+
