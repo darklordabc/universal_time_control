@@ -75,25 +75,33 @@ int _get_control_state( const control_t * cont);
 
 struct _control_manager
 {
-std::thread thread;
-std::mutex main_mutex;
-std::mutex update_and_delete_mutex;
-db_owner_t *	db_owner;
+	std::thread thread;
+	std::mutex main_mutex;
+	std::mutex update_and_delete_mutex;
+	db_owner_t *	db_owner;
 
-std::vector < control_t > to_modify;
-std::vector < control_t > to_delete;
-bool			should_insert;
+	std::vector < control_t > to_modify;
+	std::vector < control_t > to_delete;
+	bool			should_insert;
 
-set_of_controls controls;
+	set_of_controls controls;
 
-bool			should_quit;
+	bool			should_quit;
 
 
-std::mutex controls_changed_mutex;
-std::condition_variable controls_changed;
+	std::mutex controls_changed_mutex;
+	std::condition_variable controls_changed;
 
-int64_t 		last_time;
+	int64_t 		last_time;
+
+	
+
 };
+
+
+
+int		g_sound_effect = 1;
+
 
 
 static std::vector < control_t * > find_controls_matching_key(control_manager_t * ct, const key_t & key, 
@@ -309,7 +317,7 @@ void control_manager_thread(control_manager_t * ct)
 			//activate the control meet the requirement
 			for (const auto & key_pressed: keys_pressed)
 			{
-				// printf("%s, ", key_pressed.desc_utf8);
+				//LOGI("%s, %d", key_pressed.desc_utf8,key_pressed.v_code);
 				auto matching_toggle_controls = find_controls_matching_key(ct, key_pressed, CTRL_ACTIVATION_MODE_TOGGLE);
 				auto matching_press_controls = find_controls_matching_key(ct, key_pressed, 	CTRL_ACTIVATION_MODE_PRESS);
 
@@ -643,7 +651,7 @@ static float _get_timescale_for_control(control_manager_t * c, const control_t *
 }
 
 
-
+#if 0
 void StartProcess2( LPCWSTR exe_path,LPCWSTR args)
 {
 	
@@ -709,9 +717,10 @@ bool play_sound(int speedup)
 
 }
 
+#endif
 
 
-
+extern "C" __declspec(dllexport) void play_mp3(int speedup);;
 
 
 
@@ -729,24 +738,34 @@ float control_manager_calculate_timescale(control_manager_t * ct)
 			continue;
 
 		timescale = _get_timescale_for_control(ct, &control);
-		speedup = control.slow_or_fast;
+		//speedup = control.slow_or_fast;
 	}
 
-	//printf("timescale: %f\n", timescale);
-	if (timescale != o_timescale)
+	LOGI("timescale: %f\n", timescale);
+
+	if (!g_sound_effect || timescale == o_timescale)
 	{
-		o_timescale = timescale;
-		play_sound(speedup);
-		if (speedup)
-		{
-			LOGI("speed up");
-		}
-		else
-		{
-			LOGI("speed down");
-		}
+		return timescale;
 	}
 
+	
+
+	if (o_timescale < timescale)
+	{
+		speedup = 1;
+	}
+		
+	o_timescale = timescale;
+	play_mp3(speedup);
+	if (speedup)
+	{
+		LOGI("speed up");
+	}
+	else
+	{
+		LOGI("speed down");
+	}
+	
 	return timescale;
 }
 
@@ -782,6 +801,77 @@ static const char * UPDATE_CONTROLS_QUERY = R"""(
                                ;
 		 )""";
 
+
+
+
+  static void load_setting_from_db(sqlite3 * db)
+  {
+	  sqlite3_stmt *  get_from_db_stmt;
+	  int			  prepare_result = sqlite3_prepare_v2(db, "select * from setting", -1, &get_from_db_stmt, NULL);
+  
+	  if (prepare_result != SQLITE_OK)
+	  {
+		  const char *err = sqlite3_errmsg(db);
+  
+		  printf("sqlite err: %s\n", err);
+		  abort();
+	  }
+  
+	  if (sqlite3_step(get_from_db_stmt) != SQLITE_ROW)
+	  {
+		  const char *	  err = sqlite3_errmsg(db);
+  
+		  printf("sqlite load control err: %s\n", err);
+		  abort();
+	  }
+  
+	  g_sound_effect = sqlite3_column_int(get_from_db_stmt, 1);
+	  LOGI("g_sound_effect:%d",g_sound_effect);
+  
+	  sqlite3_clear_bindings(get_from_db_stmt);
+	  sqlite3_finalize(get_from_db_stmt);
+  
+  
+  }
+
+
+  void update_setting_in_db( control_manager_t *cm)
+  {
+	  sqlite3 *		db	= db_owner_lock_and_get_db(cm->db_owner);
+  
+	  sqlite3_stmt *  update_stmt;
+	  int			  prepare_result = sqlite3_prepare_v2(db, "update setting set sound_effect = ? where id=1", -1, &update_stmt, NULL);
+  
+	  if (prepare_result != SQLITE_OK)
+	  {
+		  const char *	  err = sqlite3_errmsg(db);
+  
+		  printf("sqlite err: %s\n", err);
+		  abort();
+	  }
+  
+	  LOGI("g_sound_effect:%d",g_sound_effect);
+	  sqlite3_bind_int(update_stmt, 1, g_sound_effect);
+	   
+	  if (sqlite3_step(update_stmt) != SQLITE_DONE)
+	  {
+		  const char *	  err = sqlite3_errmsg(db);
+  
+		  printf("sqlite update control err: %s\n", err);
+		  abort();
+	  }
+  
+	  sqlite3_reset(update_stmt);
+	  sqlite3_clear_bindings(update_stmt);
+	  sqlite3_finalize(update_stmt);
+
+	  //load_setting_from_db(db);
+
+	  db_owner_surrender_db_and_unlock(cm->db_owner);
+  }
+  
+   
+ 
 #include <string.h>
 
 
@@ -965,6 +1055,10 @@ static void update_control_in_db(sqlite3 * db, const control_t & control)
 
 
 
+
+
+
+
 control_manager_t * control_manager_create(db_owner_t * _db)
 {
 	control_manager_t * c = new control_manager_t;
@@ -1008,6 +1102,8 @@ control_manager_t * control_manager_create(db_owner_t * _db)
 
 	sqlite3_reset(get_from_db_stmt);
 	sqlite3_finalize(get_from_db_stmt);
+
+	load_setting_from_db(db);
 
 	db_owner_surrender_db_and_unlock(_db);
 
